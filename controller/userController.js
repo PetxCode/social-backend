@@ -228,7 +228,7 @@ const forgetPassword = async (req, res) => {
 					subject: "Reset Password Request",
 					html: `<h2>
             This is a Reset Password Request for your account, Please use this <a
-            href="${testURL}/api/user/token/${user._id}/${token}"
+            href="${testURL}/api/user/reset/${user._id}/${token}"
             >Link to complete the process</a>
             </h2>`,
 				};
@@ -253,6 +253,32 @@ const forgetPassword = async (req, res) => {
 	}
 };
 
+const resetPassword = async (req, res) => {
+	try {
+		const { password } = req.body;
+		const user = await userModel.findById(req.params.id);
+
+		if (user) {
+			const salt = await bcrypt.genSalt(10);
+			const hashed = await bcrypt.hash(password, salt);
+
+			await userModel.findByIdAndUpdate(
+				user._id,
+				{
+					password: hashed,
+				},
+				{ new: true }
+			);
+
+			res.status(201).json({ message: "password reset, you can now sign-in" });
+		} else {
+			res.status(404).json({ message: "error loading user" });
+		}
+	} catch (error) {
+		res.status(404).json({ message: error.message });
+	}
+};
+
 module.exports = {
 	createUser,
 	verifiedUser,
@@ -261,4 +287,6 @@ module.exports = {
 	deleteUser,
 	updateUser,
 	signinUser,
+	forgetPassword,
+	resetPassword,
 };
