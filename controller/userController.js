@@ -8,8 +8,8 @@ const nodemailer = require("nodemailer");
 const transport = nodemailer.createTransport({
 	service: "gmail",
 	auth: {
-		user: "ajmarketplace52@gmail.com",
-		pass: "ajmarketplace",
+		user: "Gideonekeke64@gmail.com",
+		pass: "sgczftichnkcqksx",
 	},
 });
 
@@ -142,6 +142,71 @@ const verifiedUser = async (req, res) => {
 	}
 };
 
+const signinUser = async (req, res) => {
+	try {
+		const { email, password } = req.body;
+
+		const user = await userModel.findOne({ email });
+		if (user) {
+			const check = await bcrypt.compare(password, user.password);
+
+			if (check) {
+				if (user.isVerified && user.verifiedToken === "") {
+					const token = jwt.sign(
+						{
+							_id: user._id,
+							isVerified: user.isVerified,
+						},
+						"This_isTheSEcreT",
+						{ expiresIn: "2d" }
+					);
+
+					const { password, ...info } = user._doc;
+
+					res.status(201).json({
+						message: `welcome ${user.fullName}`,
+						data: { token, ...info },
+					});
+				} else {
+					const getToken = crypto.randomBytes(32).toString("hex");
+					const token = jwt.sign({ getToken }, "This_isTheSEcreT", {
+						expiresIn: "20m",
+					});
+
+					const testURL = "http://localhost:3000";
+					const mainURL = "https://social-frontend22.herokuapp.com";
+
+					const mailOptions = {
+						from: "projectcomsol@gmail.com",
+						to: email,
+						subject: "Account Verification",
+						html: `<h2>
+            This is to verify your account, Please use this <a
+            href="${testURL}/api/user/token/${user._id}/${token}"
+            >Link to Continue</a>
+            </h2>`,
+					};
+
+					transport.sendMail(mailOptions, (err, info) => {
+						if (err) {
+							console.log(err.message);
+						} else {
+							console.log("Mail sent: ", info.response);
+						}
+					});
+
+					res.status(201).json({ message: "Check you email...!" });
+				}
+			} else {
+				res.status(404).json({ message: "password is incorrect" });
+			}
+		} else {
+		}
+	} catch (error) {
+		res.status(404).json({ message: error.message });
+	}
+};
+
 module.exports = {
 	createUser,
 	verifiedUser,
@@ -149,4 +214,5 @@ module.exports = {
 	getUser,
 	deleteUser,
 	updateUser,
+	signinUser,
 };
