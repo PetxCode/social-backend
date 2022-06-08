@@ -92,7 +92,7 @@ const createUser = async (req, res) => {
 		const mainURL = "https://social-frontend22.herokuapp.com";
 
 		const mailOptions = {
-			from: "no-reply@gmail.com",
+			from: "projectcomsol@gmail.com",
 			to: email,
 			subject: "Account Verification",
 			html: `<h2>
@@ -201,6 +201,52 @@ const signinUser = async (req, res) => {
 				res.status(404).json({ message: "password is incorrect" });
 			}
 		} else {
+		}
+	} catch (error) {
+		res.status(404).json({ message: error.message });
+	}
+};
+
+const forgetPassword = async (req, res) => {
+	try {
+		const { email } = req.body;
+		const user = await userModel.findOne({ email });
+
+		if (user) {
+			if (user.isVerified && user.verifiedToken === "") {
+				const getToken = crypto.randomBytes(32).toString("hex");
+				const token = jwt.sign({ getToken }, "This_isTheSEcreT", {
+					expiresIn: "10m",
+				});
+
+				const testURL = "http://localhost:3000";
+				const mainURL = "https://social-frontend22.herokuapp.com";
+
+				const mailOptions = {
+					from: "projectcomsol@gmail.com",
+					to: email,
+					subject: "Reset Password Request",
+					html: `<h2>
+            This is a Reset Password Request for your account, Please use this <a
+            href="${testURL}/api/user/token/${user._id}/${token}"
+            >Link to complete the process</a>
+            </h2>`,
+				};
+
+				transport.sendMail(mailOptions, (err, info) => {
+					if (err) {
+						console.log(err.message);
+					} else {
+						console.log("Mail sent: ", info.response);
+					}
+				});
+
+				res.status(201).json({ message: "Check you email...!" });
+			} else {
+				res.status(404).json({ message: "cannot perform this Operation" });
+			}
+		} else {
+			res.status(404).json({ message: "cannot find Email" });
 		}
 	} catch (error) {
 		res.status(404).json({ message: error.message });
