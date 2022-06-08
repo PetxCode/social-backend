@@ -6,10 +6,10 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
 const transport = nodemailer.createTransport({
-	service: "gmail",
+	service: "hotmail",
 	auth: {
-		user: "Gideonekeke64@gmail.com",
-		pass: "sgczftichnkcqksx",
+		user: "preciousonuegbu23@hotmail.com",
+		pass: "Top12345",
 	},
 });
 
@@ -92,7 +92,7 @@ const createUser = async (req, res) => {
 		const mainURL = "https://social-frontend22.herokuapp.com";
 
 		const mailOptions = {
-			from: "projectcomsol@gmail.com",
+			from: "preciousonuegbu23@hotmail.com",
 			to: email,
 			subject: "Account Verification",
 			html: `<h2>
@@ -177,7 +177,7 @@ const signinUser = async (req, res) => {
 					const mainURL = "https://social-frontend22.herokuapp.com";
 
 					const mailOptions = {
-						from: "projectcomsol@gmail.com",
+						from: "preciousonuegbu23@hotmail.com",
 						to: email,
 						subject: "Account Verification",
 						html: `<h2>
@@ -223,7 +223,7 @@ const forgetPassword = async (req, res) => {
 				const mainURL = "https://social-frontend22.herokuapp.com";
 
 				const mailOptions = {
-					from: "projectcomsol@gmail.com",
+					from: "preciousonuegbu23@hotmail.com",
 					to: email,
 					subject: "Reset Password Request",
 					html: `<h2>
