@@ -12,6 +12,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/user", require("./router/userRouter"));
+app.use("/api/post", require("./router/postRouter"));
+app.use("/api/like", require("./router/likeRouter"));
 
 app.listen(port, () => {
 	console.log("server is now listening...!");

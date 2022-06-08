@@ -15,7 +15,7 @@ const postModel = mongoose.Schema(
 		like: [
 			{
 				type: mongoose.Schema.Types.ObjectId,
-				ref: "likes",
+				ref: "users",
 			},
 		],
 		comment: [

@@ -6,10 +6,10 @@ const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 
 const transport = nodemailer.createTransport({
-	service: "hotmail",
+	service: "gmail",
 	auth: {
-		user: "preciousonuegbu23@hotmail.com",
-		pass: "Top12345",
+		user: "Gideonekeke64@gmail.com",
+		pass: "sgczftichnkcqksx",
 	},
 });
 
@@ -24,7 +24,7 @@ const getUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
 	try {
-		const user = await userModel.findById(res.params.id);
+		const user = await userModel.findById(req.params.id);
 		res.status(200).json({ message: "success", data: user });
 	} catch (error) {
 		res.status(404).json({ message: error.message });
@@ -33,7 +33,7 @@ const getUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
 	try {
-		const user = await userModel.findByIdAndDelete(res.params.id);
+		const user = await userModel.findByIdAndDelete(req.params.id);
 		res.status(200).json({ message: "success", data: user });
 	} catch (error) {
 		res.status(404).json({ message: error.message });
