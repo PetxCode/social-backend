@@ -18,6 +18,12 @@ const postModel = mongoose.Schema(
 				ref: "likes",
 			},
 		],
+		comment: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "comments",
+			},
+		],
 		user: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "users",
