@@ -21,7 +21,7 @@ const userModel = mongoose.Schema(
 		avatarID: {
 			type: String,
 		},
-		verifidToken: {
+		verifiedToken: {
 			type: String,
 		},
 		isVerified: {

@@ -3,6 +3,15 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cloudinary = require("../utils/cloudinary");
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+
+const transport = nodemailer.createTransport({
+	service: "gmail",
+	auth: {
+		user: "ajmarketplace52@gmail.com",
+		pass: "ajmarketplace",
+	},
+});
 
 const getUsers = async (req, res) => {
 	try {
@@ -76,9 +85,68 @@ const createUser = async (req, res) => {
 			password: hashed,
 			avatar: image.secure_url,
 			avatarID: image.public_id,
-			verifiedToken,
+			verifiedToken: token,
 		});
+
+		const testURL = "http://localhost:3000";
+		const mainURL = "https://social-frontend22.herokuapp.com";
+
+		const mailOptions = {
+			from: "no-reply@gmail.com",
+			to: email,
+			subject: "Account Verification",
+			html: `<h2>
+            This is to verify your account, Please use this <a
+            href="${testURL}/api/user/token/${user._id}/${token}"
+            >Link to Continue</a>
+            </h2>`,
+		};
+
+		transport.sendMail(mailOptions, (err, info) => {
+			if (err) {
+				console.log(err.message);
+			} else {
+				console.log("Mail sent: ", info.response);
+			}
+		});
+
+		res.status(201).json({ message: "Check you email...!" });
 	} catch (error) {
 		res.status(404).json({ message: error.message });
 	}
+};
+
+const verifiedUser = async (req, res) => {
+	try {
+		const user = await userModel.findById(req.params.id);
+
+		if (user) {
+			if (user.verifiedToken !== "") {
+				await userModel.findByIdAndUpdate(
+					req.params.id,
+					{
+						isVerified: true,
+						verifiedToken: "",
+					},
+					{ new: true }
+				);
+				res.status(200).json({ message: "Your account is now Active" });
+			} else {
+				res.status(404).json({ message: "Unable to verified" });
+			}
+		} else {
+			res.status(404).json({ message: "no user found" });
+		}
+	} catch (error) {
+		res.status(404).json({ message: error.message });
+	}
+};
+
+module.exports = {
+	createUser,
+	verifiedUser,
+	getUsers,
+	getUser,
+	deleteUser,
+	updateUser,
 };

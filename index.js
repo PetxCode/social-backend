@@ -11,6 +11,8 @@ app.get("/", (req, res) => {
 	res.status(200).json({ message: "This is start up point...!" });
 });
 
+app.use("/api/user", require("./router/userRouter"));
+
 app.listen(port, () => {
 	console.log("server is now listening...!");
 });
