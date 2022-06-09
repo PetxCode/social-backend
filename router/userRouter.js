@@ -9,11 +9,13 @@ const {
 	signinUser,
 	resetPassword,
 	forgetPassword,
+	getUserPost,
 } = require("../controller/userController");
 const upload = require("../utils/multer");
 const router = express.Router();
 
 router.route("/").get(getUsers);
+router.route("/:id/user").get(getUserPost);
 router.route("/:id").get(getUser).patch(upload, updateUser).delete(deleteUser);
 
 router.route("/register").post(upload, createUser);

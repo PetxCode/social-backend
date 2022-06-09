@@ -31,6 +31,15 @@ const getUser = async (req, res) => {
 	}
 };
 
+const getUserPost = async (req, res) => {
+	try {
+		const user = await userModel.findById(req.params.id).populate("post");
+		res.status(200).json({ message: "success", data: user });
+	} catch (error) {
+		res.status(404).json({ message: error.message });
+	}
+};
+
 const deleteUser = async (req, res) => {
 	try {
 		const user = await userModel.findByIdAndDelete(req.params.id);
@@ -42,26 +51,27 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
 	try {
-		const { fullName, userName } = req.body;
+		const { fullName, userName, bio } = req.body;
 		const user = await userModel.findById(req.params.id);
 
 		if (user) {
 			await cloudinary.uploader.destroy(user.avatarID);
 			const image = await cloudinary.uploader.upload(req.file.path);
-			const user = await userModel.findByIdAndUpdate(
+			const userData = await userModel.findByIdAndUpdate(
 				res.params.id,
 				{
 					fullName,
 					userName,
+					bio,
 					avatar: image.secure_url,
 					avatarID: image.public_id,
 				},
 				{ new: true }
 			);
-			res.status(200).json({ message: "success", data: user });
+			res.status(200).json({ message: "success", data: userData });
 		}
 	} catch (error) {
-		res.status(404).json({ message: error.message });
+		res.status(404).json({ message: `Error: ${error.message}` });
 	}
 };
 
@@ -156,6 +166,8 @@ const signinUser = async (req, res) => {
 						{
 							_id: user._id,
 							isVerified: user.isVerified,
+							follower: user.follower,
+							following: user.following,
 						},
 						"This_isTheSEcreT",
 						{ expiresIn: "2d" }
@@ -289,4 +301,5 @@ module.exports = {
 	signinUser,
 	forgetPassword,
 	resetPassword,
+	getUserPost,
 };

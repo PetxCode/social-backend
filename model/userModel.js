@@ -15,6 +15,9 @@ const userModel = mongoose.Schema(
 		password: {
 			type: String,
 		},
+		bio: {
+			type: String,
+		},
 		avatar: {
 			type: String,
 		},

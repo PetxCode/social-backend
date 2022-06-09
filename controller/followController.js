@@ -3,17 +3,25 @@ const postModel = require("../model/postModel");
 const mongoose = require("mongoose");
 const cloudinary = require("../utils/cloudinary");
 
-const createPost = async (req, res) => {
+const createFollow = async (req, res) => {
 	try {
 		const likedBefore = await userModel.findById(req.params.id);
 
 		// if (likedBefore) {
 		// 	res.status(201).json({ message: "You've already Liked Before" });
 		// } else {
-		const likePost = await postModel.findByIdAndUpdate(
-			req.params.post,
+		await userModel.findByIdAndUpdate(
+			req.body.follower,
 			{
-				$push: { like: req.params.id },
+				$push: { follower: req.user.follower, name: "Oken" },
+			},
+			{ new: true }
+		);
+
+		await userModel.findByIdAndUpdate(
+			req.body.following,
+			{
+				$push: { following: req.body.following, name: "peter" },
 			},
 			{ new: true }
 		);
@@ -25,7 +33,7 @@ const createPost = async (req, res) => {
 	}
 };
 
-const deletePost = async (req, res) => {
+const deleteFollow = async (req, res) => {
 	try {
 		const likePost = await postModel.findByIdAndUpdate(
 			req.params.post,
@@ -42,6 +50,6 @@ const deletePost = async (req, res) => {
 };
 
 module.exports = {
-	deletePost,
-	createPost,
+	createFollow,
+	deleteFollow,
 };

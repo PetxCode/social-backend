@@ -2,12 +2,15 @@ const mongoose = require("mongoose");
 
 const commentModel = mongoose.Schema(
 	{
+		comment: {
+			type: String,
+		},
 		post: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "posts",
 		},
 
-		user: {
+		posted: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "users",
 		},

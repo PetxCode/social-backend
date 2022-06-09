@@ -47,6 +47,16 @@ const viewPost = async (req, res) => {
 	}
 };
 
+const getPost = async (req, res) => {
+	try {
+		const post = await postModel.findById(req.params.post);
+
+		res.status(201).json({ message: "post is viewd", data: post });
+	} catch (error) {
+		res.status(404).json({ message: error.message });
+	}
+};
+
 const deletePost = async (req, res) => {
 	try {
 		const postData = await userModel.findById(req.params.id);
@@ -66,4 +76,5 @@ module.exports = {
 	createPost,
 	viewPost,
 	viewPosts,
+	getPost,
 };
