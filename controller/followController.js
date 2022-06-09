@@ -11,22 +11,21 @@ const createFollow = async (req, res) => {
 		// 	res.status(201).json({ message: "You've already Liked Before" });
 		// } else {
 		await userModel.findByIdAndUpdate(
-			req.body.follower,
+			req.params.followerID,
 			{
-				$push: { follower: req.user.follower, name: "Oken" },
+				$push: { follower: req.params.followingID },
 			},
 			{ new: true }
 		);
-
 		await userModel.findByIdAndUpdate(
-			req.body.following,
+			req.params.followingID,
 			{
-				$push: { following: req.body.following, name: "peter" },
+				$push: { follower: req.params.followerID },
 			},
 			{ new: true }
 		);
 
-		res.status(201).json({ message: "Post Liked", data: likePost });
+		res.status(201).json({ message: "You are now following" });
 		// }
 	} catch (error) {
 		res.status(404).json({ message: error.message });
@@ -35,15 +34,29 @@ const createFollow = async (req, res) => {
 
 const deleteFollow = async (req, res) => {
 	try {
-		const likePost = await postModel.findByIdAndUpdate(
-			req.params.post,
+		const likedBefore = await userModel.findById(req.params.id);
+
+		// if (likedBefore) {
+		// 	res.status(201).json({ message: "You've already Liked Before" });
+		// } else {
+		await userModel.findByIdAndUpdate(
+			req.params.followerID,
 			{
-				$pull: { like: req.params.id },
+				$pull: { follower: req.params.followingID },
 			},
 			{ new: true }
 		);
 
-		res.status(201).json({ message: "Liked Deleted", data: likePost });
+		await userModel.findByIdAndUpdate(
+			req.params.followingID,
+			{
+				$pull: { following: req.params.followerID },
+			},
+			{ new: true }
+		);
+
+		res.status(201).json({ message: "You are no more following" });
+		// }
 	} catch (error) {
 		res.status(404).json({ message: error.message });
 	}
