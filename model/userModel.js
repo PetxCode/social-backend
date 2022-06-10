@@ -38,13 +38,13 @@ const userModel = mongoose.Schema(
 		],
 		follower: [
 			{
-				type: mongoose.Schema.Types.ObjectId,
+				type: mongoose.Types.ObjectId,
 				ref: "users",
 			},
 		],
 		following: [
 			{
-				type: mongoose.Schema.Types.ObjectId,
+				type: mongoose.Types.ObjectId,
 				ref: "users",
 			},
 		],

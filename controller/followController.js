@@ -10,17 +10,18 @@ const createFollow = async (req, res) => {
 		// if (likedBefore) {
 		// 	res.status(201).json({ message: "You've already Liked Before" });
 		// } else {
+
 		await userModel.findByIdAndUpdate(
-			req.params.followerID,
+			req.params.followingID,
 			{
-				$push: { follower: req.params.followingID },
+				$push: { following: req.params.followerID },
 			},
 			{ new: true }
 		);
 		await userModel.findByIdAndUpdate(
-			req.params.followingID,
+			req.params.followerID,
 			{
-				$push: { follower: req.params.followerID },
+				$push: { follower: req.params.followingID },
 			},
 			{ new: true }
 		);
