@@ -29,7 +29,7 @@ const createPost = async (req, res) => {
 
 const viewPosts = async (req, res) => {
 	try {
-		const post = await postModel.find();
+		const post = await postModel.find().sort({ createdAt: -1 });
 
 		res.status(201).json({ message: "post created", data: post });
 	} catch (error) {

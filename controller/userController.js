@@ -58,7 +58,7 @@ const updateUser = async (req, res) => {
 			await cloudinary.uploader.destroy(user.avatarID);
 			const image = await cloudinary.uploader.upload(req.file.path);
 			const userData = await userModel.findByIdAndUpdate(
-				res.params.id,
+				user._id,
 				{
 					fullName,
 					userName,
@@ -68,7 +68,13 @@ const updateUser = async (req, res) => {
 				},
 				{ new: true }
 			);
-			res.status(200).json({ message: "success", data: userData });
+
+			res.status(200).json({
+				message: "success: user Found",
+				data: userData,
+			});
+		} else {
+			res.status(200).json({ message: "can't ready user" });
 		}
 	} catch (error) {
 		res.status(404).json({ message: `Error: ${error.message}` });
