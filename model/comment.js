@@ -14,6 +14,12 @@ const commentModel = mongoose.Schema(
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "users",
 		},
+		like: [
+			{
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "users",
+			},
+		],
 	},
 	{ timestamps: true }
 );

@@ -39,7 +39,22 @@ const viewPosts = async (req, res) => {
 
 const viewPost = async (req, res) => {
 	try {
-		const post = await userModel.findById(req.params.id).populate("post");
+		const post = await userModel
+			.findById(req.params.id)
+			.populate({ path: "post", options: { sort: { createdAt: -1 } } });
+
+		res.status(201).json({ message: "post created", data: post });
+	} catch (error) {
+		res.status(404).json({ message: error.message });
+	}
+};
+
+const viewPost1 = async (req, res) => {
+	try {
+		const post = await userModel.findById(req.params.id).populate({
+			path: "post",
+			options: { sort: { createdAt: -1 }, limit: 3 },
+		});
 
 		res.status(201).json({ message: "post created", data: post });
 	} catch (error) {
